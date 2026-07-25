@@ -141,11 +141,20 @@ internal static class Notifications
     {
         if (string.IsNullOrEmpty(url)) return;
 
+        // URLs can come from the update API, and UseShellExecute hands anything it is
+        // given to the registered protocol handler, so only allow web schemes through
+        if (!Uri.TryCreate(url, UriKind.Absolute, out Uri? uri)
+            || (uri.Scheme != Uri.UriSchemeHttps && uri.Scheme != Uri.UriSchemeHttp))
+        {
+            Logger.Warn("Refused to open URL with an unsupported scheme: {0}", url);
+            return;
+        }
+
         try
         {
             System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo
             {
-                FileName = url,
+                FileName = uri.AbsoluteUri,
                 UseShellExecute = true
             });
         }

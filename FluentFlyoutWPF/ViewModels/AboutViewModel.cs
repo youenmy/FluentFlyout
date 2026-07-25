@@ -3,8 +3,8 @@
 
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using FluentFlyout.Classes;
 using System.Collections.ObjectModel;
-using System.Diagnostics;
 
 namespace FluentFlyoutWPF.ViewModels;
 
@@ -177,20 +177,7 @@ public partial class AboutViewModel : ObservableObject
     [RelayCommand]
     private void OpenLicenseUrl(string url)
     {
-        if (!string.IsNullOrEmpty(url))
-        {
-            try
-            {
-                Process.Start(new ProcessStartInfo
-                {
-                    FileName = url,
-                    UseShellExecute = true
-                });
-            }
-            catch
-            {
-                // Silently fail if URL cannot be opened
-            }
-        }
+        // shared helper validates the scheme before handing the URL to the shell
+        Notifications.OpenUrlInBrowser(url);
     }
 }
