@@ -24,7 +24,6 @@ using System.Windows.Interop;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Threading;
-using Windows.ApplicationModel;
 using Windows.Media.Control;
 using static FluentFlyout.Classes.NativeMethods;
 using static FluentFlyoutWPF.Classes.Utils.MonitorUtil;
@@ -190,15 +189,8 @@ public partial class MainWindow : MicaWindow
         {
             LocalizationManager.ApplyLocalization();
 
-            try // update last known version. gets the version of the app, works only in release mode
-            {
-                var version = Package.Current.Id.Version;
-                SettingsManager.Current.LastKnownVersion = $"v{version.Major}.{version.Minor}.{version.Build}";
-            }
-            catch
-            {
-                SettingsManager.Current.LastKnownVersion = "debug";
-            }
+            // update last known version, from the package identity or the .exe itself
+            SettingsManager.Current.LastKnownVersion = AppVersionHelper.GetVersion() ?? "debug";
 
             Logger.Info($"Current version: {SettingsManager.Current.LastKnownVersion}");
 

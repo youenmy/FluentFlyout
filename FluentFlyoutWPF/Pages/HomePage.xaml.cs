@@ -11,7 +11,6 @@ using System.Diagnostics;
 using System.IO;
 using System.Windows;
 using System.Windows.Controls;
-using Windows.ApplicationModel;
 using Wpf.Ui.Controls;
 using MessageBox = Wpf.Ui.Controls.MessageBox;
 
@@ -26,15 +25,7 @@ public partial class HomePage : Page
         InitializeComponent();
         DataContext = SettingsManager.Current;
 
-        try
-        {
-            var version = Package.Current.Id.Version;
-            VersionTextBlock.Text = $"v{version.Major}.{version.Minor}.{version.Build}";
-        }
-        catch
-        {
-            VersionTextBlock.Text = "debug version";
-        }
+        VersionTextBlock.Text = AppVersionHelper.GetVersion() ?? "debug version";
 
         UpdateLastCheckedText();
     }
